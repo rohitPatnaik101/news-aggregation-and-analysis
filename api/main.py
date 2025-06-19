@@ -3,6 +3,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from modules.agents import FinancialAgents, GeneralAgent
 from modules.database import MongoDBHandler
@@ -21,6 +22,15 @@ mongo_uri = os.getenv("MONGO_URI")
 
 # Initialize FastAPI app
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Initialize agents and database
 financial_agents = FinancialAgents(together_api_key, newsapi_key)
